@@ -184,6 +184,7 @@ const defaultForm: FormState = {
 }
 
 function App() {
+  const [activeSection, setActiveSection] = useState('about')
   const [activeSkillFilter, setActiveSkillFilter] = useState<SkillFilter>('All')
   const [activeSkill, setActiveSkill] = useState(skillGroups[0].title)
   const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null)
@@ -208,6 +209,27 @@ function App() {
     const timeout = window.setTimeout(() => setCopiedValue(null), 1500)
     return () => window.clearTimeout(timeout)
   }, [copiedValue])
+
+  useEffect(() => {
+    const sections = navItems
+      .map((item) => document.getElementById(item.href.slice(1)))
+      .filter((section): section is HTMLElement => section !== null)
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleSections = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((first, second) => first.boundingClientRect.top - second.boundingClientRect.top)
+
+        const activeId = visibleSections[0]?.target.id
+        if (activeId) setActiveSection(activeId)
+      },
+      { rootMargin: '-25% 0px -65% 0px' },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -323,7 +345,16 @@ function App() {
 
             <div className="hidden items-center gap-6 text-sm text-slate-300 md:flex">
               {navItems.map((item) => (
-                <a key={item.label} href={item.href} className="transition hover:text-cyan-300">
+                <a
+                  key={item.label}
+                  href={item.href}
+                  aria-current={activeSection === item.href.slice(1) ? 'location' : undefined}
+                  className={`shrink-0 whitespace-nowrap rounded-full px-2 py-1.5 transition hover:text-cyan-200 ${
+                    activeSection === item.href.slice(1)
+                      ? 'border border-white/20 bg-white/10 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_8px_24px_rgba(34,211,238,0.12)] backdrop-blur-xl'
+                      : 'border border-transparent'
+                  }`}
+                >
                   {item.label}
                 </a>
               ))}
@@ -332,7 +363,7 @@ function App() {
             <div className="flex items-center gap-3">
               <div className="hidden items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-[10px] font-medium text-emerald-300 sm:flex">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-                Open for Full-Stack & Contract Roles
+                Open for Full-Stack Roles
               </div>
               <a
                 href="#contact"
