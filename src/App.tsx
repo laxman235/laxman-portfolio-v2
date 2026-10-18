@@ -17,7 +17,7 @@ import {
 import AboutSection from './components/AboutSection'
 import './App.css'
 
-type SkillFilter = 'All' | 'Frontend' | 'Backend' | 'Databases & Cloud' | 'DevOps & Tools'
+type SkillFilter = 'All' | 'Frontend' | 'Backend' | 'Databases & Cloud' | 'DevOps & Tools' | 'AI & System Design'
 
 type FormState = {
   name: string
@@ -111,7 +111,7 @@ const projectData: ProjectData[] = [
   },
 ]
 
-const skillFilters: SkillFilter[] = ['All', 'Frontend', 'Backend', 'Databases & Cloud', 'DevOps & Tools']
+const skillFilters: SkillFilter[] = ['All', 'Frontend', 'Backend', 'Databases & Cloud', 'DevOps & Tools', 'AI & System Design']
 
 const skillGroups = [
   {
@@ -137,6 +137,12 @@ const skillGroups = [
     title: 'DevOps & Tools',
     items: ['Docker', 'Kubernetes', 'CI/CD', 'Grafana', 'Linux', 'Git', 'Bitbucket', 'Maven', 'Postman', 'Swagger/OpenAPI', 'JUnit', 'Mockito', 'Jira'],
     level: 92,
+  },
+  {
+    category: 'AI & System Design',
+    title: 'AI & System Design',
+    items: ['Claude Agent', 'Claude Code', 'MCP', 'System Design', 'HLD / LLD', 'C4 Architecture', 'Event-Driven Design', 'Scalability & Resilience'],
+    level: 80,
   },
 ]
 
@@ -200,6 +206,62 @@ function App() {
     const timeout = window.setTimeout(() => setCopiedValue(null), 1500)
     return () => window.clearTimeout(timeout)
   }, [copiedValue])
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    let previousY = window.scrollY
+    let lastSweepTime = 0
+    let frame = 0
+    const cards = document.querySelectorAll<HTMLElement>(
+      '.glass-panel, main article, main form, main aside, main .about-hover-card, main .mirror-scroll-target',
+    )
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle('mirror-visible', entry.isIntersecting)
+        })
+      },
+      { threshold: 0.2 },
+    )
+
+    cards.forEach((card) => {
+      card.classList.add('mirror-reflect')
+      observer.observe(card)
+    })
+
+    const handleScroll = () => {
+      if (frame) return
+      frame = window.requestAnimationFrame(() => {
+        frame = 0
+        const currentY = window.scrollY
+        const difference = currentY - previousY
+        previousY = currentY
+        if (Math.abs(difference) < 2) return
+
+        const direction = difference > 0 ? 'down' : 'up'
+        document.documentElement.dataset.scrollDirection = direction
+        const now = performance.now()
+        if (now - lastSweepTime < 420) return
+        lastSweepTime = now
+
+        document.querySelectorAll<HTMLElement>('.mirror-reflect.mirror-visible').forEach((card) => {
+          card.classList.remove('mirror-sweep-up', 'mirror-sweep-down')
+          void card.offsetWidth
+          card.classList.add(`mirror-sweep-${direction}`)
+        })
+      })
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', handleScroll)
+      if (frame) window.cancelAnimationFrame(frame)
+      delete document.documentElement.dataset.scrollDirection
+    }
+  }, [])
 
   const handleCopyValue = async (value: string, label: string) => {
     try {
@@ -314,7 +376,7 @@ function App() {
                     key={group.title}
                     type="button"
                     onClick={() => setActiveSkill(group.title)}
-                    className={`rounded-2xl border p-5 text-left transition ${
+                    className={`mirror-scroll-target rounded-2xl border p-5 text-left transition ${
                       activeSkill === group.title
                         ? 'border-cyan-400/40 bg-cyan-500/10'
                         : 'border-slate-700 bg-slate-950/60 hover:border-slate-500'

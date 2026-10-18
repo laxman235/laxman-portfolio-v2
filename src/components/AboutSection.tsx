@@ -11,6 +11,7 @@ import {
   MapPin,
   ServerCog,
   Terminal,
+  Workflow,
 } from 'lucide-react'
 
 const email = 'janakwadelaxman23@gmail.com'
@@ -42,6 +43,13 @@ const capabilities = [
     description: 'Durable data platforms and production-ready cloud deployments.',
     technologies: ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'Docker', 'Kubernetes', 'AWS'],
     accent: 'from-emerald-400 to-cyan-400',
+  },
+  {
+    title: 'AI & System Design',
+    icon: Workflow,
+    description: 'AI-assisted engineering with architecture designed for scale, resilience, and clear service boundaries.',
+    technologies: ['Claude Agent', 'Claude Code', 'MCP', 'HLD / LLD', 'C4', 'Event-Driven Design'],
+    accent: 'from-fuchsia-400 to-cyan-400',
   },
 ]
 
@@ -76,23 +84,6 @@ export function AboutSection() {
     return () => window.clearTimeout(timeout)
   }, [copied, copyFailed])
 
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    const cards = document.querySelectorAll<HTMLElement>('#about .about-reflect')
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          entry.target.classList.toggle('about-in-view', entry.isIntersecting)
-        })
-      },
-      { threshold: 0.2 },
-    )
-
-    cards.forEach((card) => observer.observe(card))
-    return () => observer.disconnect()
-  }, [])
-
   const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText(email)
@@ -123,7 +114,7 @@ export function AboutSection() {
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[0.82fr_1.18fr]">
-        <aside className="about-reveal about-reveal-delay-1 about-hover-card about-reflect overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-900/70 shadow-xl shadow-slate-950/30 backdrop-blur-xl">
+        <aside className="about-reveal about-reveal-delay-1 about-hover-card overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-900/70 shadow-xl shadow-slate-950/30 backdrop-blur-xl">
           <div className="about-accent-line h-1.5 bg-gradient-to-r from-cyan-400 via-sky-400 to-emerald-400" />
           <div className="p-5 sm:p-6">
             <div>
@@ -211,7 +202,7 @@ export function AboutSection() {
         </aside>
 
         <div className="space-y-5">
-          <div className="about-reveal about-reveal-delay-2 about-hover-card about-reflect rounded-2xl border border-slate-700/80 bg-slate-900/60 p-5 backdrop-blur-lg sm:p-6">
+          <div className="about-reveal about-reveal-delay-2 about-hover-card rounded-2xl border border-slate-700/80 bg-slate-900/60 p-5 backdrop-blur-lg sm:p-6">
             <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-300">Engineering Narrative</h2>
             <div className="mt-4 space-y-4 text-sm leading-7 text-slate-300 sm:text-base">
               <p>
@@ -223,12 +214,12 @@ export function AboutSection() {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {capabilities.map(({ title, icon: Icon, description, technologies, accent }, index) => (
               <article
                 key={title}
                 style={{ animationDelay: `${280 + index * 100}ms` }}
-                className="about-reveal about-hover-card about-reflect group rounded-2xl border border-slate-700/80 bg-slate-900/55 p-4 transition duration-200 hover:border-cyan-400/40 hover:bg-slate-900/85"
+                className="about-reveal about-hover-card group rounded-2xl border border-slate-700/80 bg-slate-900/55 p-4 transition duration-200 hover:border-cyan-400/40 hover:bg-slate-900/85"
               >
                 <div className={`mb-3 inline-flex rounded-xl bg-gradient-to-br ${accent} p-[1px]`}>
                   <span className="rounded-xl bg-slate-950/90 p-2 text-cyan-200">
@@ -279,7 +270,7 @@ export function AboutSection() {
             <article
               key={principle.title}
               style={{ animationDelay: `${450 + index * 100}ms` }}
-              className="about-reveal about-hover-card about-reflect rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition duration-200 hover:border-emerald-400/30 hover:bg-slate-900/70"
+              className="about-reveal about-hover-card rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition duration-200 hover:border-emerald-400/30 hover:bg-slate-900/70"
             >
               <span className="font-mono text-xs text-emerald-300">0{index + 1}</span>
               <h3 className="mt-2 text-base font-semibold text-white">{principle.title}</h3>
