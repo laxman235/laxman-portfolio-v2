@@ -23,6 +23,7 @@ type FormState = {
   name: string
   email: string
   service: string
+  customService: string
   timeline: string
   brief: string
 }
@@ -155,9 +156,9 @@ const servicePackages = [
   },
   {
     id: 'migration',
-    title: 'Cloud Migration & Microservices Modernization',
+    title: 'Platform Modernization & Microservices Engineering',
     timeline: '4-12 weeks',
-    summary: 'Support teams migrating legacy workloads to cloud-ready microservices with monitoring dashboards, secure APIs, and resilient deployment workflows.',
+    summary: 'Modernize legacy applications with service-oriented architecture, monitoring dashboards, secure APIs, and resilient deployment workflows.',
   },
   {
     id: 'api',
@@ -177,6 +178,7 @@ const defaultForm: FormState = {
   name: '',
   email: '',
   service: 'Complete Full-Stack Web Application (React/Angular + Spring Boot)',
+  customService: '',
   timeline: '',
   brief: '',
 }
@@ -287,6 +289,9 @@ function App() {
     if (!form.name.trim()) nextErrors.name = 'Please enter your name.'
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       nextErrors.email = 'Please enter a valid email address.'
+    }
+    if (form.service === 'Other (please specify)' && !form.customService.trim()) {
+      nextErrors.customService = 'Please specify the service you need.'
     }
     if (!form.timeline.trim()) nextErrors.timeline = 'Please share a timeline or budget range.'
     if (!form.brief.trim()) nextErrors.brief = 'Please describe your project requirements.'
@@ -608,7 +613,20 @@ function App() {
                         {service.title}
                       </option>
                     ))}
+                    <option value="Other (please specify)">Other (please specify)</option>
                   </select>
+                  {form.service === 'Other (please specify)' && (
+                    <div className="mt-4">
+                      <label className="mb-2 block text-sm font-medium text-slate-200">Please specify the service</label>
+                      <input
+                        value={form.customService}
+                        onChange={(event) => setForm({ ...form, customService: event.target.value })}
+                        className="w-full rounded-2xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400/50"
+                        placeholder="What service do you need?"
+                      />
+                      {formErrors.customService && <p className="mt-2 text-xs text-red-400">{formErrors.customService}</p>}
+                    </div>
+                  )}
                 </div>
 
                 <div className="mt-5">
