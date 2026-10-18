@@ -155,9 +155,9 @@ const servicePackages = [
   },
   {
     id: 'migration',
-    title: 'Legacy Monolith Modernization & Cloud Migration',
+    title: 'Cloud Migration & Microservices Modernization',
     timeline: '4-12 weeks',
-    summary: 'Modernize aging systems, break monoliths into services, and move critical workloads to resilient cloud infrastructure.',
+    summary: 'Support teams migrating legacy workloads to cloud-ready microservices with monitoring dashboards, secure APIs, and resilient deployment workflows.',
   },
   {
     id: 'api',
@@ -485,8 +485,8 @@ function App() {
           <section id="client-services" className="py-8">
             <div className="mb-8 flex items-end justify-between gap-4">
               <div>
-                <p className="mb-2 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Client Services</p>
-                <h2 className="text-3xl font-bold text-white">Freelance Execution for Product Teams</h2>
+                <p className="mb-2 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Core Services</p>
+                <h2 className="text-3xl font-bold text-white">Platform Modernization & Product Delivery</h2>
               </div>
               <div className="hidden h-px flex-1 bg-gradient-to-r from-cyan-500/40 to-transparent md:block" />
             </div>
